@@ -109,12 +109,9 @@ public class Server {
 			newbuf.put(b);
 		}
 		
-		return new String(newbuf.array(), UTF8).trim();
-		
-		
+		return new String(newbuf.array(), UTF8).trim();	
 	}
 		
-	
 	
 	public static void interactiveClient(SelectionKey key) {
 		ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -184,7 +181,7 @@ public class Server {
 					try {
 						int calResult = Integer.parseInt(result);
 						if(student.getProblem() == calResult) {
-							writebuf("Correct", client);
+							writebuf("Correct All Problem Pass You Can Now Communication Freely", client);
 							student.setSession(student.getSession()+1);
 						}
 						else {
@@ -199,43 +196,42 @@ public class Server {
 				}	
 			}
 			else if(student.getSession() >= 1) {
-				writebuf("All Problem Pass You Can Now Communication Freely", client);
-				student.setSession(student.getSession()+1);
-				String cal = String.format("[%d] %s", student.getId(), result);
-				System.out.println(cal);
+				writebuf("Check Server", client);
+				if(result.length() > 0) {
+					student.setSession(student.getSession()+1);
+					String cal = String.format("[%d] %s", student.getId(), result);
+					System.out.println(cal);}
 			}
 			return;
 		
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
+			System.out.println("Bye Client...");
 			try {
 				client.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				System.out.print("Bye Client...");
 			}
 			key.cancel();
 			
 		}
 		catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.out.println("Bye Client...");
 			try {
 				client.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.print("Bye Client...");
 			}
 			key.cancel();
 		}
 		catch(Exception e2) {
-			e2.printStackTrace();
+			System.out.println("Bye Client...");
 			try {
 				client.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.print("Bye Client...");
 			}
 			key.cancel();		
 		}
@@ -243,9 +239,6 @@ public class Server {
 	
 
 	}
-	
-	
-	
 	public static void register(Selector selector, ServerSocketChannel serverSocket) throws IOException{
 		
 		SocketChannel client = serverSocket.accept();
@@ -262,12 +255,7 @@ public class Server {
 		else {
 			map.put(ip, new Client(ip));	
 			System.out.println("new client connected..."+ip);
-		}
-
-		
-
-		
-		
+		}	
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -276,14 +264,11 @@ public class Server {
 		try {
 			Selector selector = Selector.open();
 			ServerSocketChannel ssc  = ServerSocketChannel.open();
-			ssc.bind(new InetSocketAddress("0.0.0.0", 6666));
+			ssc.bind(new InetSocketAddress("0.0.0.0", 8080));
 			ssc.configureBlocking(false);
 			ssc.register(selector, SelectionKey.OP_ACCEPT);
 			
-			
-			
-			//serverSocket = new ServerSocket(6666);
-			//serverSocket.setReuseAddress(true);
+
 			DataInputStream din = null;
 			
 			while(true) {
@@ -305,13 +290,6 @@ public class Server {
 					}
 				}
 				it.remove();
-				
-				
-				
-				
-				
-				
-				
 			}
 
 		}
